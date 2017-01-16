@@ -1,0 +1,57 @@
+/* 
+ * File:   main.cpp
+ * Author: cottin_j
+ *
+ * Created on February 8, 2012, 5:42 PM
+ */
+
+#include "Control.hpp"
+
+//en shell, les mots valides sont repetes par le programme
+//pour un debug rapide
+
+int main(int argc, char** argv)
+{
+  std::string data;
+
+  if (argc == 1)
+  {
+    while (std::cin)
+    {
+      getline(std::cin, data);
+      Control * lexed = new Control (data);
+      lexed->parsing();
+      if (data.find(";;") != std::string::npos)
+      {
+        //lexed->get_list2();
+        delete lexed;
+        return (0);
+      }
+   delete lexed;
+    }
+  }
+  while (--argc && argv++)
+  {
+    std::ifstream fichier(*argv, std::ifstream::in);
+    if (fichier)
+    {
+      std::stringstream buffer;
+      buffer << fichier.rdbuf();
+      fichier.close();
+      data = buffer.str();
+      Control * lexed = new Control (data);
+      lexed->parsing();
+      //lexed->get_list2();
+      delete lexed;
+    }
+    else
+      std::cout << "can't open " << *argv << std::endl;
+  }
+<<<<<<< .mine
+=======
+  
+>>>>>>> .r22
+  return 0;
+}
+
+

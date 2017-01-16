@@ -1,0 +1,35 @@
+push int32(42)
+push int32(33)
+add
+push float(44.55)
+mul
+dump
+pop
+push int32(42)
+push int32(33)
+push float(-1111)
+push float(-.)
+push float(-1.111)
+push float(-11.11)
+push float(44.5.5)
+push double(42.42)
+dump
+exit
+dump
+
+/    data.clear();
+    //    Control * lexed = new Control (data);
+    while (std::cin)
+    {
+      //      data.clear();
+      //      getline(std::cin, data);
+      //      if (data.find(";;") != std::string::npos)
+      //      {
+      //        lexed->new_data(cassos);
+      //        lexed->parsing();
+      //        //delete lexed;
+      //        return (0);
+      //      }
+      //      lexed->new_data(data);
+      //      lexed->parsing();
+      //    }

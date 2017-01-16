@@ -1,0 +1,52 @@
+/*
+** network_listen.c for zappy in /home/duval_q//Documents/projects/zappy/src/server/net
+**
+** Made by quentin duval
+** Login   <duval_q@epitech.net>
+**
+** Started on  Tue May 29 04:30:59 2012 quentin duval
+** Last update Thu Jun 14 21:28:19 2012 quentin duval
+*/
+
+#include	<stdio.h>
+#include	"network.h"
+#include	"logger.h"
+
+extern t_network *g_network;
+
+static void configure_socket(t_socket *socket, int port)
+{
+  socket->addr.sin_port = htons(port);
+  socket->addr.sin_family = AF_INET;
+  socket->addr.sin_addr.s_addr = INADDR_ANY;
+  socket->length = (sizeof(socket->addr));
+}
+
+bool network_listen_to(t_socket *socket,
+		       int port,
+		       t_nt_create_cb create)
+{
+  t_listener *listener;
+
+  if (!g_network)
+    return (false);
+  if (!socket || !port)
+    return (false);
+  configure_socket(socket, port);
+  if (bind(socket->fd,
+	   (SOCKADDR *) & socket->addr,
+	   socket->length) == SOCKET_ERROR
+      || listen(socket->fd, MAX_CO) == SOCKET_ERROR
+      || !(listener = malloc(sizeof(*listener))))
+    {
+      logger_error("[NETWORK] Impossible to listen to port %d", port);
+      return (false);
+    }
+  listener->socket = socket;
+  listener->create = create;
+  if (socket->fd > g_network->nfds)
+    g_network->nfds = socket->fd;
+  list_add_begin(g_network->listened, listener);
+  logger_message("[NETWORK] server listening at port : %d", port);
+  return (true);
+}

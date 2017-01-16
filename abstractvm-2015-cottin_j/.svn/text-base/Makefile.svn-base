@@ -1,0 +1,30 @@
+NAME=		avm
+SRC=		main.cpp Input.cpp Control.cpp Processor.cpp Stack.cpp
+
+CXXFLAGS=	-Wextra -Werror
+CC=		g++
+OBJ=		$(SRC:.c=.o)
+
+RM=		rm -f
+
+ECHO=		echo -e
+
+$(NAME):	$(OBJ)
+		@$(CC) -o $(NAME) $(OBJ) $(CXXFLAGS)
+		@$(ECHO) '\033[0;32m> Compiled\033[0m'
+
+all:		$(NAME)
+
+clean:
+		-@$(RM) ./*.o
+		-@$(RM) *~
+		-@$(RM) ./\#*\#
+		@$(ECHO) '\033[0;35m> Directory cleaned\033[0m'
+
+fclean:	clean
+		-@$(RM) $(NAME)
+		@$(ECHO) '\033[0;35m> Remove executable\033[0m'
+
+re:		fclean all
+
+.PHONY :	all re clean fclean

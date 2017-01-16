@@ -1,0 +1,63 @@
+#ifndef __NETWORK_INETWORK_HPP_
+#define __NETWORK_INETWORK_HPP_
+
+/*
+** Interface INetwork pour simplifier le bordel
+** Balance des exceptions quand la connexion est perdue (catchée)
+** est bloquant - utiliser isReady
+*/
+
+#include <exception>
+#include <string>
+#include <list>
+
+class parser;
+namespace game { class data; }
+
+
+class INetwork
+{
+public:
+  ~INetwork() {};
+
+public:
+  virtual void	send(const std::string &msg) = 0;
+  virtual void	send(const std::list<std::string> &list) = 0;
+  virtual void  receive(std::string &buffer, float timeout) = 0;
+
+  virtual bool	connect() = 0;
+  virtual bool	disconnect() = 0;
+
+  virtual void	setIp(const std::string&host) = 0;
+  virtual void	setPort(const std::string &port) = 0;
+
+  virtual bool	isValid(void) = 0;
+  virtual bool	operator!() = 0;
+
+private:
+  virtual void receive(std::string &buffer) = 0;
+  virtual bool isReady(float timeout) = 0;
+};
+
+namespace network
+{
+  void                  init(INetwork &sock, game::data &data, parser &parse);
+  void                  iteration(INetwork &sock, game::data &data, parser &parse);
+  extern "C" INetwork   *create();
+
+  class except : public std::exception
+  {
+  public:
+    except(const std::string &str) throw();
+    ~except() throw();
+    const char *what() const throw();
+
+  private:
+    const std::string msg;
+
+  private:
+    except();
+  };
+};
+
+#endif /* __NETWORK_INETWORK_HPP_ */

@@ -1,0 +1,35 @@
+        push int8(10)
+        push int16(100)
+        add
+
+        push float(650)
+        sub
+
+        push int32(2)
+        mul
+
+        push double(100.42)
+        div
+
+        ; push int32(5689)
+        ;  sub
+
+        push float(5.2)
+        mod
+
+        ; -------------
+
+        ; exemple.avm -
+        ; -------------
+
+
+
+        ; push int8(65)
+        ; pop
+        ; print
+
+        ; push int16(125)
+
+        ; assert int16(125)
+        dump
+        exit

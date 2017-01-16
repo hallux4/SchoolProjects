@@ -1,0 +1,210 @@
+/* 
+ * File:   Control2.cpp
+ * Author: cottin_j
+ * 
+ * Creuted on February 11, 2012, 3:24 PM
+ */
+
+
+#include "Control.hpp"
+
+Control::Control(std::string & data)
+: line(1)
+{
+  this->entry = new Input(data);
+  this->process = new Processor;
+  try {
+  lexem_list = this->entry->lexing(data);
+  }
+  catch (const bad_argument & err)
+  {
+        std::cerr << err.getMessage() << std::endl;
+        throw;
+  }
+  
+  ut = this->lexem_list.begin();
+  fill_vector_comp();
+  fill_vector_type();
+  std::cout << "Construction CONTROL" << std::endl;
+}
+
+Control::~Control()
+{
+  delete process;
+  delete entry;
+  std::cout << "Destruction CONTROL" << std::endl;
+}
+
+void Control::new_data(std::string & data)
+{
+  lexem_list.clear();
+  lexem_list = this->entry->lexing(data);
+}
+
+void Control::parsing()
+{
+  for (ut = this->lexem_list.begin(); ut != this->lexem_list.end();)
+  {
+    if (!(dispatch_clean()))
+    {
+      lexem_list.clear();
+      return;
+    }
+  }
+  throw bad_argument("No Exit Instruction ", " : ", line);
+}
+
+bool Control::dispatch_clean()
+{
+  std::string one_arg("pop>dump>add>sub>mul>div>mod>exit>print");
+  std::string more_arg("push>assert");
+  size_t val_return;
+
+  if ((one_arg.find(*ut) != std::string::npos))
+  {
+    one_arg_func();
+    line++;
+    return true;
+  }
+  else
+  {
+    if (more_arg_func())
+    {
+      line++;
+      return true;
+    }
+    return false;
+  }
+}
+
+bool Control::one_arg_func()
+{
+  std::string casing(*ut);
+  int total = 0;
+
+  for (std::string::iterator lg = casing.begin(); lg != casing.end(); lg++)
+    total += *lg;
+
+  switch (total) {
+  case 335: process->pop();
+    break;
+  case 438: process->dump();
+    break;
+  case 297: process->add();
+    break;
+  case 330: process->sub();
+    break;
+  case 334: process->mul();
+    break;
+  case 323: process->div();
+    break;
+  case 320: process->mod();
+    break;
+  case 442: endOfProgram();
+    break;
+  case 557: process->print();
+  }
+  ut++;
+  return true;
+}
+
+bool Control::more_arg_func()
+{
+  std::string lex;
+
+  if (*ut == "push")
+  {
+    lex = *ut;
+    ut++;
+    if (ut != lexem_list.end() && scan_type())
+    {
+      process->push((eOperandType) e_val, *ut);
+      ut++;
+      return true;
+    }
+  }
+  else if (*ut == "assert")
+  {
+    lex = *ut;
+    ut++;
+    if (ut != lexem_list.end() && scan_type())
+    {
+      process->assert((eOperandType) e_val, *ut);
+      ut++;
+      return true;
+    }
+  }
+  throw bad_argument("Argument incorrect : ", *ut, line);
+  return false;
+}
+
+bool Control::scan_type()
+{
+  std::map<std::string, eOperandType>::iterator itmap;
+  std::map<std::string, eOperandType> enum_map;
+
+  enum_map["int8"] = INT8;
+  enum_map["int16"] = INT16;
+  enum_map["int32"] = INT32;
+  enum_map["float"] = FLOAT;
+  enum_map["double"] = DOUBLE;
+
+  itmap = enum_map.find(*ut);
+  if (itmap != enum_map.end())
+  {
+    e_val = (*itmap).second;
+    ut++;
+    if (!(scan_value()))
+    {
+      throw bad_argument("Incorrect or Absent value", *ut, line);
+      //std::cout << "incorrect or absent value" << std::endl;
+      return false;
+    }
+    return true;
+  }
+  throw bad_argument("Incorrect or Absent type", *ut, line);
+  return false;
+}
+
+void Control::get_list2()
+{
+  for (ut = this->lexem_list.begin(); ut != this->lexem_list.end(); ut++)
+    std::cout << *ut << std::endl;
+}
+
+void Control::endOfProgram()
+{
+  throw error("");
+}
+
+bool Control::scan_value()
+{
+  if (find(to_type.begin(), to_type.end(), (*ut)) != to_type.end())
+    if (find(to_comp.begin(), to_comp.end(), (*ut)) != to_comp.end())
+      return false;
+  return true;
+}
+
+void Control::fill_vector_type()
+{
+  to_type.push_back("int8");
+  to_type.push_back("int16");
+  to_type.push_back("int32");
+  to_type.push_back("float");
+  to_type.push_back("double");
+}
+
+void Control::fill_vector_comp()
+{
+  to_comp.push_back("push");
+  to_comp.push_back("pop");
+  to_comp.push_back("dump");
+  to_comp.push_back("assert");
+  to_comp.push_back("add");
+  to_comp.push_back("sub");
+  to_comp.push_back("mul");
+  to_comp.push_back("div");
+  to_comp.push_back("mod");
+  to_comp.push_back("print");
+  to_comp.push_back("exit");
+}

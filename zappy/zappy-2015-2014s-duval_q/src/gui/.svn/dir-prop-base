@@ -1,0 +1,11 @@
+K 10
+svn:ignore
+V 43
+a.out
+obj
+server
+Zappy.kdev4
+client
+.kdev4
+
+END

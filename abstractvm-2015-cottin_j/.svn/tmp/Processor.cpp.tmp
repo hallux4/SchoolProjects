@@ -1,0 +1,169 @@
+
+#include  "Processor.hpp"
+#include "IStack.hpp"
+#include  "Operand.hpp"
+#include  "Stack.hpp"
+
+Processor::Processor()
+{
+ IStack * stack = new Stack();
+ memory = stack;
+}
+
+Processor::~Processor()
+{
+ delete memory;
+}
+
+void
+Processor::push(eOperandType type, std::string value)
+{
+ memory->push(createOperand(type, value));
+}
+
+void
+Processor::pop()
+{
+ memory->pop();
+}
+
+void
+Processor::dump()
+{
+ memory->dump();
+}
+
+void
+Processor::assert(eOperandType type, std::string value)
+{
+ IOperand* tmp = memory->pop();
+
+ if (tmp->getType() != type || tmp->toString().compare(value) != 0)
+  {
+   //throw exception
+  }
+ memory->push(tmp);
+}
+
+void
+Processor::add()
+{
+ if (memory->getSize() < 2)
+  {
+   //throw exception
+  }
+ IOperand* operand1 = memory->pop();
+ IOperand* operand2 = memory->pop();
+ IOperand* result = *operand1 + *operand2;
+
+ delete operand1;
+ delete operand2;
+
+ memory->push(result);
+}
+
+void
+Processor::sub()
+{
+ if (memory->getSize() < 2)
+  {
+   //throw exception
+  }
+ IOperand* operand1 = memory->pop();
+ IOperand* operand2 = memory->pop();
+ IOperand* result = *operand1 - *operand2;
+
+ delete operand1;
+ delete operand2;
+
+ memory->push(result);
+}
+
+void
+Processor::mul()
+{
+ if (memory->getSize() < 2)
+  {
+   //throw exception
+  }
+ IOperand* operand1 = memory->pop();
+ IOperand* operand2 = memory->pop();
+ IOperand* result = *operand1 * *operand2;
+
+ delete operand1;
+ delete operand2;
+
+ memory->push(result);
+}
+
+void
+Processor::div()
+{
+ if (memory->getSize() < 2)
+  {
+   //throw exception
+  }
+ IOperand* operand1 = memory->pop();
+ IOperand* operand2 = memory->pop();
+ IOperand* result = *operand1 / *operand2;
+
+ delete operand1;
+ delete operand2;
+
+ memory->push(result);
+}
+
+void
+Processor::mod()
+{
+ if (memory->getSize() < 2)
+  {
+   //throw exception
+  }
+ IOperand* operand1 = memory->pop();
+ IOperand* operand2 = memory->pop();
+ IOperand* result = *operand1 % *operand2;
+
+ delete operand1;
+ delete operand2;
+
+ memory->push(result);
+}
+
+IOperand*     Processor::createOperand(eOperandType& type, std::string value)
+{
+ switch(type)
+  {
+   case INT8:
+    return new Operand<char>(type, atoi(value.c_str()));
+   case INT16:
+    return new Operand<short>(type, atoi(value.c_str()));
+   case INT32:
+    return new Operand<int>(type, atoi(value.c_str()));
+   case FLOAT:
+    return new Operand<float>(type, atof(value.c_str()));
+   case DOUBLE:
+    return new Operand<double>(type, atof(value.c_str()));
+  }
+ return NULL;
+}
+
+void		Processor::print()
+{
+  IOperand*	tmp = memory->pop();
+
+  if (tmp->getType() != INT8)
+    {
+      //throw exception
+    }
+  else
+    {
+      std::cout << tmp->toString() << std::endl;
+      memory->push(tmp);
+    }
+}
+
+void		Processor::exit()
+{
+  exit(0);
+}

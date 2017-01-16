@@ -1,0 +1,5 @@
+#include	"../src/ia/edges/ForeverEdge.hpp"
+#include	"../src/ia/edges/BienvenueEdge.hpp"
+#include	"../src/ia/edges/KOEdge.hpp"
+#include	"../src/ia/edges/OKEdge.hpp"
+#include	"../src/ia/edges/NumericEdge.hpp"

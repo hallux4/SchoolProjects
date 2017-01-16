@@ -1,0 +1,48 @@
+# Indiquer dans quels dossiers sont vos sources.
+SRCDIR=	
+DIRDSP=	
+# Indiquer dans quels dossiers seront vos objets.
+OBJDIR=	
+
+# Nom du binaire et source_projet.
+NAME=	
+SRC=		
+
+# Nom de la lib et source_lib.
+LIBDSP=	
+SRCDSP=	
+
+# Remplacer lib par votre dossier, et -my- par votre lib, ex: pour libdsp.a -dsp-.
+LIB=		-Llib/ -lmy
+# Optionnel : Indiquez le dossier de vos headers, remplacez include.
+INC=		-I -Iinclude/
+
+CFLAGS       = -O2 -W -Wall -ansi -pedantic -g
+CC		= /usr/bin/gcc
+OBJ          = $(SRC:.c=.o)
+
+RM=		rm -f
+# commentaire du process
+ECHO		= echo -e
+
+$(NAME):	$(OBJ)
+		@$(CC) $(INC) $(CFLAGS) -o $(NAME) $(OBJDIR)/$(OBJ) $(LIB)
+		@$(ECHO) '\033[0;32m> Compiled\033[0m'
+
+clean        :
+		-@$(RM) $(OBJ)
+		-@$(RM) *~
+		-@$(RM) \#*#
+		@$(ECHO) '\033[0;35m> Directory cleaned\033[0m'
+
+all:		 $(NAME)
+
+fclean:	clean
+		-@$(RM) $(NAME)
+		@$(ECHO) '\033[0;35m> Remove executable\033[0m'
+
+re:		fclean all
+
+# vrai règle .c.o avec possibilité de choisir repertoire, ici OBJDIR
+.c.o        : 
+		$(CC) $(INC) $(CFLAGS) -o $(OBJDIR)/$@ -c $<

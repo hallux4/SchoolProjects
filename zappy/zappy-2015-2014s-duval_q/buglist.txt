@@ -1,0 +1,14 @@
+
+Reproduction :
+Lancer le server, connecter un joueur (python testing.py in src/client), attendre sa mort
+
+
+
+ * On peut enregistrer deux équipes avec le même nom
+
+Reproduction :
+./zappy_server -p 4242 -n toto toto
+
+
+
+ * On peut mettre un nom vide / utiliser "GRAPHIC" & "GRAPHIC\n" comme nom d'équipe :

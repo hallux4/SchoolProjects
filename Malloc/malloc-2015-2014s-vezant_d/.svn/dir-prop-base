@@ -1,0 +1,13 @@
+K 10
+svn:ignore
+V 208
+libmy_malloc.so
+libmy_malloc_x86_64.so
+libmy_malloc_x86_64Linux.so
+libmy_malloc_echo x86_64-Linux.so
+libmy_malloc_NAME.so
+libmy_malloc_echo x86_64 Linux.so
+libmy_malloc_x86_64-Linux.so
+libmy_malloc_-Linux.so
+
+END
